@@ -1,6 +1,6 @@
 {
-  "name": "devgpt",
-  "displayName": "devGPT",
+  "name": "devgpt-frontend",
+  "displayName": "devgpt_frontend",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -13,8 +13,8 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [{
-      "command": "devgpt.helloWorld",
-      "title": "Hello World"
+      "command": "devgpt-frontend.helloWorld",
+      "title": "DevGPT"
     }]
   },
   "scripts": {
