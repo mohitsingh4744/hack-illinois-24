@@ -8,7 +8,17 @@ You need to download puppeteer and chromium with the following terminal command 
 npm i --save puppeteer
 ```
 
+In order to utilize the GPT API, you will also need to install the openai packages to the package.json dependencies. Run the following command on your terminal:
+
+```
+npm i openai
+```
+
+Make sure the version is 4.0.0 or greater to ensure proper functionality.
+
 Then, in order to run the VS Code extension, click f5 to pull up a extension development host and open the file you want to use the extension on. From there, the option to use DevHelper will be visible on the top right of the screen.
+
+
 
 ## Inspiration
 
