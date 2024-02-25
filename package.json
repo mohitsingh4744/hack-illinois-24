@@ -1,6 +1,6 @@
 {
-  "name": "devgpt-frontend",
-  "displayName": "devgpt_frontend",
+  "name": "devhelper",
+  "displayName": "devhelper",
   "description": "",
   "version": "0.0.1",
   "engines": {
