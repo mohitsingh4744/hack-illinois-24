@@ -5,6 +5,22 @@ const vscode = require('vscode');
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
+import { automateSearch } from './index.js'; // Import your backend function
+
+async function fetchDataAndDisplay() {
+    try {
+        // Fetch data from the backend
+        const data = await fetchDataFromBackend();
+
+        // Display the data in a pop-up window
+        vscode.window.showInformationMessage('Data from backend: ' + JSON.stringify(data));
+    } catch (error) {
+        // If there's an error, display it in a pop-up window
+        vscode.window.showErrorMessage('Error fetching data from backend: ' + error.message);
+    }
+}
+
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -21,7 +37,8 @@ function activate(context) {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Bozoanan and Lesi from DevGPT!');
+		//vscode.window.showInformationMessage('Bozoanan and Lesi from DevGPT!');
+		fetchDataAndDisplay();
 	});
 
 	context.subscriptions.push(disposable);

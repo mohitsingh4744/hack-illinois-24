@@ -1,18 +1,16 @@
 const puppeteer = require('puppeteer');
 
 function main() {
-    automateSearch();
+    automateSearch("bumanan srirajan");
 }
 
-async function automateSearch() {
+async function automateSearch(searchText) {
     const browser = await puppeteer.launch({headless: false});
     const pages = await browser.pages();
     const page = pages[0];
     await page.setViewport({ width: 1288, height: 800 });
-    await page.goto('https://google.com');
-    await page.waitForSelector('.glFyf');
-    await page.type('input.glFyf', 'cat');
-    await page.click('input.gNO89b');
+    await page.goto(`https://www.google.com/search?q=${encodeURIComponent(searchText)}`);
+    console.log("Popup page is open. Close it manually to end.");
 }
 
 main()
