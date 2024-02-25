@@ -4,9 +4,9 @@
 
 You need to download puppeteer and chromium with the following terminal command (note: this can take some time to complete):
 
-'''
+```
 npm i --save puppeteer
-'''
+```
 
 Then, in order to run the VS Code extension, click f5 to pull up a extension development host and open the file you want to use the extension on. From there, the option to use DevHelper will be visible on the top right of the screen.
 
