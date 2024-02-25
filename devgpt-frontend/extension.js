@@ -61,15 +61,30 @@ function activate(context) {
         return;
       }
 
-      const option = await vscode.window.showQuickPick(['DevSearch', 'DevGPT']);
+      const option = await vscode.window.showQuickPick([
+        { label: 'DevSearch', iconPath: new vscode.ThemeIcon('search-editor-label-icon') },
+        { label: 'DevGPT', iconPath: new vscode.ThemeIcon('hubot') },
+        // Add more options with corresponding icons
+      ], {
+        placeHolder: 'Select an option',
+        matchOnDescription: true,
+      });
+
       if (option) {
-        const subOption = await vscode.window.showQuickPick(['debug', 'explain', 'custom']);
+        const subOption = await vscode.window.showQuickPick([
+          { label: 'debug', iconPath: new vscode.ThemeIcon('disassembly-editor-label-icon') }, 
+          { label: 'explain', iconPath: new vscode.ThemeIcon('notebook-render-output') }, 
+          { label: 'custom', iconPath: new vscode.ThemeIcon('notebook-edit') }
+        ], {
+          placeHolder: 'Select a sub-option',
+        });
+
         if (subOption) {
           let userInput;
-          if (subOption === 'custom') {
+          if (subOption.label === 'custom') {
             userInput = await vscode.window.showInputBox({ prompt: 'Enter custom input' });
           }
-          fetchDataAndDisplay(selectedText, option, subOption, userInput);
+          fetchDataAndDisplay(selectedText, option.label, subOption.label, userInput);
         }
       }
     } else {
