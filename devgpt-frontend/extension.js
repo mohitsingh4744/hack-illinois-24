@@ -1,123 +1,90 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+const puppeteer = require('puppeteer');
 
-const { automateSearch } = require('../google_search/index.js').default; // Import your backend function
+async function automateSearch(searchText) {
+  const browser = await puppeteer.launch({ headless: false });
+  const pages = await browser.pages();
+  const page = pages[0];
+  await page.setViewport({ width: 1288, height: 800 });
+  await page.goto(`https://www.google.com/search?q=${encodeURIComponent(searchText)}`);
+  console.log("Popup page is open. Close it manually to end.");
+}
 
-async function fetchDataAndDisplay() {
-    try {
-        // Fetch data from the backend
-        const data = await automateSearch('desigamoorthy nainar');
-
-        // Display the data in a pop-up window
-        //vscode.window.showInformationMessage('Data from backend: ' + JSON.stringify(data));
-    } catch (error) {
-        // If there's an error, display it in a pop-up window
-        vscode.window.showErrorMessage('Error fetching data from backend: ' + error.message);
+async function fetchDataAndDisplay(code, option, subOption, userInput) {
+  try {
+    if (!code.trim()) {
+      throw new Error('Selected text is empty. Please highlight some code before using this command.');
     }
+
+    // Fetch data based on selected option, sub-option, highlighted code, and user input
+    let data;
+    if (option === 'DevSearch' && subOption === 'debug') {
+      data = await automateSearch(`Debug ${code}`);
+    } else if (option === 'DevSearch' && subOption === 'explain') {
+      data = await automateSearch(`Explain ${code}`);
+    } else if (option === 'DevSearch' && subOption === 'custom') {
+      // Handle custom logic for DevSearch custom option with user input
+      data = await automateSearch(`${userInput} ${code}`);
+    } else if (option === 'DevGPT' && subOption === 'debug') {
+      // Handle logic for DevGPT debug
+    } else if (option === 'DevGPT' && subOption === 'explain') {
+      // Handle logic for DevGPT explain
+    } else if (option === 'DevGPT' && subOption === 'custom') {
+      // Handle custom logic for DevGPT custom option with user input
+      data = await fetchDataForCustomOption(code, userInput);
+    }
+
+    // Display the data in a pop-up window
+    vscode.window.showInformationMessage('Data from backend: ' + JSON.stringify(data));
+  } catch (error) {
+    // If there's an error, display it in a pop-up window
+    vscode.window.showErrorMessage('Error fetching data from backend: ' + error.message);
+  }
 }
 
-
-function sendCodeToBackend(code) {
-  console.log('Sending code to backend:', code);
-
-  const backendEndpoint = 'https://example.com'; // Replace with your actual backend URL
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ code }),
-  };
-
-  console.log('HTTP Request:', backendEndpoint, requestOptions);
-
-  fetch(backendEndpoint, requestOptions)
-    .then(response => response.json())
-    .then(data => {
-      console.log('Backend response:', data);
-    })
-    .catch(error => {
-      console.error('Error sending code to backend:', error);
-    });
+// Function to handle custom logic for DevSearch and DevGPT custom options with user input
+async function fetchDataForCustomOption(code, userInput) {
+  // Implement your custom logic using code, userInput, etc.
+  // Return the data fetched based on the custom logic
+  return await automateSearch(`Custom ${code} with input: ${userInput}`);
 }
 
-/**
- * @param {vscode.ExtensionContext} context
- */
 function activate(context) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "devgpt-frontend" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('devgpt-frontend.helloWorld', function () {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		//vscode.window.showInformationMessage('Bozoanan and Lesi from DevGPT!');
-		fetchDataAndDisplay();
-	});
-
-	context.subscriptions.push(disposable);
-
-
-
-  let disposable4 = vscode.commands.registerCommand('extension.gptDebug', () => {
+  // Command to trigger the main popup with options
+  let mainCommandDisposable = vscode.commands.registerCommand('extension.showOptions', async () => {
     const editor = vscode.window.activeTextEditor;
     if (editor) {
-      const selectedText = editor.document.getText(editor.selection);
-      console.log("gptDebug: \n");
-      sendCodeToBackend(selectedText);
+      const selectedText = editor.document.getText(editor.selection).trim();
+      if (!selectedText) {
+        vscode.window.showErrorMessage('Selected text is empty. Please highlight some code before using this command.');
+        return;
+      }
+
+      const option = await vscode.window.showQuickPick(['DevSearch', 'DevGPT']);
+      if (option) {
+        const subOption = await vscode.window.showQuickPick(['debug', 'explain', 'custom']);
+        if (subOption) {
+          let userInput;
+          if (subOption === 'custom') {
+            userInput = await vscode.window.showInputBox({ prompt: 'Enter custom input' });
+          }
+          fetchDataAndDisplay(selectedText, option, subOption, userInput);
+        }
+      }
     } else {
       vscode.window.showErrorMessage('No active text editor');
     }
   });
 
-  // Register the command
-  context.subscriptions.push(disposable4);
-  let disposable2 = vscode.commands.registerCommand('extension.gptExplain', () => {
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-      const selectedText = editor.document.getText(editor.selection);
-      console.log("gptExplain: \n");
-      sendCodeToBackend(selectedText);
-    } else {
-      vscode.window.showErrorMessage('No active text editor');
-    }
-  });
-
-  // Register the command
-  context.subscriptions.push(disposable2);
-
-  let disposable3 = vscode.commands.registerCommand('extension.gptGoogle', () => {
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-      const selectedText = editor.document.getText(editor.selection);
-      console.log("gptGoogle: \n");
-      sendCodeToBackend(selectedText);
-    } else {
-      vscode.window.showErrorMessage('No active text editor');
-    }
-  });
-
-  // Register the command
-  context.subscriptions.push(disposable3);
-
+  context.subscriptions.push(mainCommandDisposable);
 }
 
-// This method is called when your extension is deactivated
 function deactivate() {
   console.log('Extension deactivated');
 }
 
 module.exports = {
-	activate,
-	deactivate
-}
+  activate,
+  deactivate
+};
