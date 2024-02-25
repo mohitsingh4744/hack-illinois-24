@@ -5,21 +5,20 @@ const vscode = require('vscode');
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
-import { automateSearch } from './index.js'; // Import your backend function
+const { automateSearch } = require('../google_search/index.js').default; // Import your backend function
 
 async function fetchDataAndDisplay() {
     try {
         // Fetch data from the backend
-        const data = await fetchDataFromBackend();
+        const data = await automateSearch('desigamoorthy nainar');
 
         // Display the data in a pop-up window
-        vscode.window.showInformationMessage('Data from backend: ' + JSON.stringify(data));
+        //vscode.window.showInformationMessage('Data from backend: ' + JSON.stringify(data));
     } catch (error) {
         // If there's an error, display it in a pop-up window
         vscode.window.showErrorMessage('Error fetching data from backend: ' + error.message);
     }
 }
-
 
 /**
  * @param {vscode.ExtensionContext} context
