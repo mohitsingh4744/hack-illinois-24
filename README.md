@@ -1,4 +1,4 @@
-### Supercharge your coding experience in VSCode — highlight and click to take your code to the next level
+# Supercharge your coding experience in VSCode — highlight and click to take your code to the next level
 
 ## Inspiration
 
