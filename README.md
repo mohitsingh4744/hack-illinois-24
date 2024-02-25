@@ -1,5 +1,15 @@
 # Supercharge your coding experience in VSCode — highlight and click to take your code to the next level
 
+## Installation and Usage
+
+You need to download puppeteer and chromium with the following terminal command (note: this can take some time to complete):
+
+'''
+npm i --save puppeteer
+'''
+
+Then, in order to run the VS Code extension, click f5 to pull up a extension development host and open the file you want to use the extension on. From there, the option to use DevHelper will be visible on the top right of the screen.
+
 ## Inspiration
 
 As developers, we all have run into errors that leave us stumped. Whether it's trying to understand legacy code without proper documentation or debugging a new feature you're implementing, the best resources for understanding and solving your problem are often online. DevHelper aims to bridge the gap between developing code and receiving online feedback, giving developers a coherent programming experience.
